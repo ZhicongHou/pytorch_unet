@@ -27,8 +27,21 @@ def validate(net,device,criterion,val_loader):
   return loss/itr
 
 
+
+
+def plot(train_list,valid_list):
+    range_x = range(5, len(train_list))
+    plt.plot(range_x, train_list[10:], 'r', label='Training loss')
+    plt.plot(range_x, valid_list[10:], 'b', label='Validation loss')
+    plt.title('Training and validation loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.show()
+
+
 def train(net, device, data_dir,
-          epochs=10,
+          epochs=20,
           batch_size=16,
           lr=0.001,
           val_percent=0.2
@@ -41,7 +54,7 @@ def train(net, device, data_dir,
     val_loader = DataLoader(val, batch_size=batch_size, shuffle=False, num_workers=16, pin_memory=True, drop_last=False)
 
     optimizer = optim.RMSprop(net.parameters(), lr=lr, weight_decay=1e-8, momentum=0.9)
-    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min' if net.n_classes > 1 else 'max', patience=2)
+    # scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min' if net.n_classes > 1 else 'max', patience=2)
     criterion = nn.BCELoss()
 
     train_list = []
@@ -71,17 +84,7 @@ def train(net, device, data_dir,
         train_list.append(epoch_loss)
         valid_list.append(val_loss)
         print('Epoch:%d, train_loss:%.3f, val_loss:%.3f' % (epoch, epoch_loss, val_loss))
-
-    range_x = range(10, len(train_list))
-    plt.plot(range_x, train_list[10:], 'r', label='Training loss')
-    plt.plot(range_x, valid_list[10:], 'b', label='Validation loss')
-    plt.title('Training and validation loss')
-    plt.xlabel('Epochs')
-    plt.ylabel('Loss')
-    plt.legend()
-    plt.show()
-
-
+    plot(train_list,valid_list)
 
 
 

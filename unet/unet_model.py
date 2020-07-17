@@ -15,6 +15,7 @@ class UNet(nn.Module):
     self.up3 = UpUnit(in_channels=256, out_channels=128)
     self.up4 = UpUnit(in_channels=128, out_channels=64)
     self.out = OutUnit(in_channels=64,out_channels=n_classes)
+
   def forward(self, x):
     x1 = self.start(x)
     x2 = self.down1(x1)
